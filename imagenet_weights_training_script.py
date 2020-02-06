@@ -30,25 +30,15 @@ def load_images_from_folder(path):
 #create vector Y
 def data_loader(base_path):
     
-    x_train0 = load_images_from_folder(base_path + "/empty")
-    x_train1 = load_images_from_folder(base_path + "/box")
-    x_train2 = load_images_from_folder(base_path + "/recorder")
-    x_train3 = load_images_from_folder(base_path + "/box_recorder")
-    x_train4 = load_images_from_folder(base_path + "/box_sonda")
-    x_train5 = load_images_from_folder(base_path + "/recorder_sonda")
-    x_train6 = load_images_from_folder(base_path + "/all")
+    class_names = os.listdir(base_path)
     
-    y_train0 = np.zeros(len(x_train0))
-    y_train1 = np.ones(len(x_train1))
-    y_train2 = np.repeat(2, len(x_train2))
-    y_train3 = np.repeat(3, len(x_train3))
-    y_train4 = np.repeat(4, len(x_train4))
-    y_train5 = np.repeat(5, len(x_train5))
-    y_train6 = np.repeat(6, len(x_train6))
+    x_train = np.empty(shape=[0, 256, 256, 3], dtype = np.uint8)
+    y_train = list()
     
-    x_train = np.concatenate((x_train0, x_train1, x_train2, x_train3, x_train4, x_train5, x_train6), axis = 0)
-    
-    y_train = np.concatenate((y_train0, y_train1, y_train2, y_train3, y_train4, y_train5, y_train6), axis = 0)
+    for name in class_names:
+        new_x = np.reshape(load_images_from_folder(base_path + "/" + name), (-1,256,256,3))
+        x_train = np.concatenate((x_train, new_x), axis = 0)
+        y_train = np.concatenate((y_train, np.repeat(class_names.index(name), len(new_x))), axis = 0)
     
     return (x_train, y_train)
 
